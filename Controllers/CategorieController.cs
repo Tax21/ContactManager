@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ContactManager.Data;
 using ContactManager.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ContactManager.Controllers
 {
@@ -45,12 +46,14 @@ namespace ContactManager.Controllers
             return View(categorie);
         }
 
+        [Authorize]
         // GET: Categorie/Create
         public IActionResult Create()
         {
             return View();
         }
 
+        [Authorize]
         // POST: Categorie/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
@@ -67,6 +70,7 @@ namespace ContactManager.Controllers
             return View(categorie);
         }
 
+        [Authorize]
         // GET: Categorie/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
@@ -83,6 +87,7 @@ namespace ContactManager.Controllers
             return View(categorie);
         }
 
+        [Authorize]
         // POST: Categorie/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
@@ -118,6 +123,7 @@ namespace ContactManager.Controllers
             return View(categorie);
         }
 
+        [Authorize]
         // GET: Categorie/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
@@ -136,6 +142,7 @@ namespace ContactManager.Controllers
             return View(categorie);
         }
 
+        [Authorize]
         // POST: Categorie/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]

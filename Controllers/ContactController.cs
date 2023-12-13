@@ -7,9 +7,11 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ContactManager.Data;
 using ContactManager.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ContactManager.Controllers
 {
+    [Authorize]
     public class ContactController : Controller
     {
         private readonly ApplicationDbContext _context;
