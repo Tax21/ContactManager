@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using ContactManager.Data;
 using ContactManager.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 
 namespace ContactManager.Controllers
 {
@@ -15,16 +16,34 @@ namespace ContactManager.Controllers
     public class ContactController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<IdentityUser> _userManager;//1.  Tahina:  need Identity users
 
-        public ContactController(ApplicationDbContext context)
+        public ContactController(ApplicationDbContext context, UserManager<IdentityUser> userManager) //2.  Tahina:  need Identity users)
         {
             _context = context;
+            _userManager = userManager;//3.  Tahina:  need Identity users
+        }
+
+        //4.  Tahina:  method to return currently logged in user
+        private Task<IdentityUser?> GetCurrentUserAsync()
+        {
+            return _userManager.GetUserAsync(HttpContext.User);
         }
 
         // GET: Contact
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Contacts.Include(c => c.Categorie);
+            //5.  Tahina:  retrieve currently logged in user
+            var user = await GetCurrentUserAsync();
+
+            if (user == null)
+            {
+                //not logged in 
+                return NotFound(); //note:  could return some kind of error view here
+            }
+            var applicationDbContext = _context.Contacts
+                .Include(c => c.Categorie)
+                .Where(f => f.UserID == user.Id);//mwilliams: only for currently loggeg in user;
             return View(await applicationDbContext.ToListAsync());
         }
 
@@ -61,8 +80,18 @@ namespace ContactManager.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("ContactID,Nom,Prenom,Addresse,Ville,Province,CodePostal,Telephone,Courriel,DateCreation,CategorieID,UserID")] Contact contact)
         {
+            //5.  Tahina:  retrieve currently logged in user
+            var user = await GetCurrentUserAsync();
+
+            if (user == null)
+            {
+                //not logged in 
+                return NotFound(); //note:  could return some kind of error view here
+            }
+
             if (ModelState.IsValid)
             {
+                contact.UserID = user.Id;
                 _context.Add(contact);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
