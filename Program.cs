@@ -16,6 +16,23 @@ builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
 
+// Seeding de la base de données
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    try
+    {
+        var context = services.GetRequiredService<ApplicationDbContext>();
+        ApplicationDbContext.Initialize(context);
+    }
+    catch (Exception ex)
+    {
+        // Gérer les erreurs si nécessaire
+        Console.WriteLine("Une erreur s'est produite lors du seeding de la base de données.");
+        Console.WriteLine(ex.Message);
+    }
+}
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {

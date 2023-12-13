@@ -20,12 +20,12 @@ namespace ContactManager.Data
             if (!context.Categories.Any())
             {
                 var categories = new List<Categorie>
-        {
-            new Categorie { Nom = "Famille" },
-            new Categorie { Nom = "Ami" },
-            new Categorie { Nom = "Travail" },
-            new Categorie { Nom = "Autre" }
-        };
+                {
+                    new Categorie { Nom = "Famille" },
+                    new Categorie { Nom = "Ami" },
+                    new Categorie { Nom = "Travail" },
+                    new Categorie { Nom = "Autre" }
+                };
 
                 context.Categories.AddRange(categories);
                 context.SaveChanges();
